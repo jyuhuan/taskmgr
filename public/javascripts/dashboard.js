@@ -1,4 +1,45 @@
 function refresh() {
+  // Check for new tasks or deleted tasks
+  Q.allTasks().done(tasks => {
+    tasks.forEach(t => {
+      if ($(`#taskItem-${t.id}`).length == 0) {
+        const taskItem = createTaskItem(t);
+        $('#ulTasks').append(createTaskItem(t))
+        console.log(`#taskItem-${t.id}`)
+        $(`#taskItem-${t.id}`).on('click', function (e) {
+          const taskId = $(this).attr('id').split('-')[1];
+
+          // Mark as selected visually
+          const CSS = {
+            SelectedTaskItem: {
+              background: '#EEE'
+            },
+            UnselectedTaskItem: {
+              background: 'unset'
+            }
+          }
+          $(this).css(CSS.SelectedTaskItem);
+          $(`#taskItem-${lastSelectedTaskId}`).css(CSS.UnselectedTaskItem);
+
+          if (taskId in detailPanes) {
+            // Show the detailed pane
+          }
+          else {
+            // Create a detailed pane
+            Q.getTaskById(taskId).done(t => {
+              const detailedPaneContent = createDetailPane(t);
+              $('.rightPane').html(detailedPaneContent);
+            });
+          }
+
+          lastSelectedTaskId = taskId;
+          
+        })
+      }
+    });
+  });
+
+  // Update task progress
   Q.allTasks().done(tasks => {
     tasks.forEach(t => {
       Q.progressOf(t.id).done(response => {
@@ -12,6 +53,29 @@ const detailPanes = {};  // Caches detail panes
 let lastSelectedTaskId = -1;
 
 
+function createTaskItem(task) {
+  return `
+    <li id="taskItem-${task.id}" class="task">
+      <div id="taskIndicator-${task.id}" class="indicator">
+        <svg height="22" width="22">
+          <circle cx="11" cy="11" r="10" stroke-width="1" stroke="#eee" fill="transparent"></circle>
+          <circle cx="11" cy="11" r="10" stroke-dasharray="62.8" stroke-dashoffset="50" stroke-width="2" stroke="#999" fill="transparent"></circle>
+          <text id="taskProgress-${task.id}" x="11" y="11" fill="#999" text-anchor="middle" alignment-baseline="central" font-size="10px">${Math.floor(task.progress * 100)}</text>
+        </svg>
+      </div>
+      <div class="main">
+        <div class="head">
+          <div id="taskName-${task.id}" class="name">${task.name}</div>
+          <div id="taskStartTime-${task.id}" class="startTime">${task.startTime}</div>
+        </div>
+        <div id="taskDescription-${task.id}" class="description">
+          ${task.description}
+        </div>
+      </div>
+    </li>  
+  `;
+}
+
 function createDetailPane(task) {
   return `
     <div class="detail">
@@ -22,7 +86,7 @@ function createDetailPane(task) {
             <div class="progress"></div>
         </div>
         <div class="progressDetail">
-          <div>123</div>
+          <span>72</span> / <span>100</span>
         </div>
         <div class="terminal">
             <div class="title">output.txt</div>
@@ -62,65 +126,7 @@ function createDetailPane(task) {
 
 $(() => {
 
-  Q.allTasks().done(tasks => {
-    tasks.map(t => {
-
-      $('#ulTasks').append(`
-        <li id="taskItem-${t.id}" class="task">
-          <div id="taskIndicator-${t.id}" class="indicator">
-            <svg height="22" width="22">
-              <circle cx="11" cy="11" r="10" stroke-width="1" stroke="#eee" fill="transparent"></circle>
-              <circle cx="11" cy="11" r="10" stroke-dasharray="62.8" stroke-dashoffset="50" stroke-width="2" stroke="#999" fill="transparent"></circle>
-              <text id="taskProgress-${t.id}" x="11" y="11" fill="#999" text-anchor="middle" alignment-baseline="central" font-size="10px">${Math.floor(t.progress * 100)}</text>
-            </svg>
-          </div>
-          <div class="main">
-            <div class="head">
-              <div id="taskName-${t.id}" class="name">${t.name}</div>
-              <div id="taskStartTime-${t.id}" class="startTime">${t.startTime}</div>
-            </div>
-            <div id="taskDescription-${t.id}" class="description">
-              ${t.description}
-            </div>
-          </div>
-        </li>  
-      `)
-
-    });
-
-
-
-    $('li.task').on('click', function (e) {
-      const taskId = $(this).attr('id').split('-')[1];
-
-      // Mark as selected visually
-      const CSS = {
-        SelectedTaskItem: {
-          background: '#EEE'
-        },
-        UnselectedTaskItem: {
-          background: 'unset'
-        }
-      }
-      $(this).css(CSS.SelectedTaskItem);
-      $(`#taskItem-${lastSelectedTaskId}`).css(CSS.UnselectedTaskItem);
-
-      if (taskId in detailPanes) {
-        // Show the detailed pane
-      }
-      else {
-        // Create a detailed pane
-        Q.getTaskById(taskId).done(t => {
-          const detailedPaneContent = createDetailPane(t);
-          $('.rightPane').html(detailedPaneContent);
-        });
-      }
-
-      lastSelectedTaskId = taskId;
-      
-    })
-
-  });
+  refresh();
 
   
   setInterval(refresh, 1000);

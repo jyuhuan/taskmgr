@@ -1,0 +1,23 @@
+{
+  "tasks": {
+      "0": {
+      "id": 0,
+      "name": "Feature extraction",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ",
+      "startTime": "16:34:55",
+      "progress": 0.72
+    },
+    "1": {
+      "id": 1,
+      "name": "Normalizer tuning",
+      "startTime": "17:23:12",
+      "progress": 0.29
+    },
+    "2": {
+      "id": 2,
+      "name": "Syntactic parsing for MPQA asdf qwer asd",
+      "startTime": "23:34:22",
+      "progress": 0.89
+    }
+  }
+}
