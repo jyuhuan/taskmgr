@@ -92,7 +92,7 @@ router.put('/:id/max',         (req, res, next) => res.json(tryChangePropertyOfT
 router.put('/:id/finish', (req, res, next) => {
   const id = req.params.id;
   if (Q.exists(id)) {
-    Q.setStepsOf(req.params.id, 100);
+    Q.setStepsOf(id, Q.maxOf(id));
     res.send(Success(true));
   }
   else res.json(Failure(Error.TaskNotExist));
