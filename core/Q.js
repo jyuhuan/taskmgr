@@ -41,6 +41,7 @@ const ε = module.exports;
 ε.setDescriptionOf = (id, d) => tasks[id].description = d;
 ε.setStepsOf = (id, p) => tasks[id].steps = p;
 ε.setMaxOf = (id, p) => tasks[id].max = p;
+ε.remove = (id) => delete tasks[id];
 
 // General modifier methods
 ε.setPropOf = (id, k, v) => tasks[id][k] = v;

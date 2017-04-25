@@ -98,4 +98,13 @@ router.put('/:id/finish', (req, res, next) => {
   else res.json(Failure(Error.TaskNotExist));
 })
 
+router.delete('/:id', (req, res, next) => {
+  const id = req.params.id;
+  if (Q.exists(id)) {
+    Q.remove(id);
+    res.json(Success(true));
+  }
+  else res.json(Failure(Error.TaskNotExist));
+});
+
 module.exports = router;
