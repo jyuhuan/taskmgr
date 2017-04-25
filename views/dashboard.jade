@@ -3,20 +3,25 @@ html
   head
     title Progress Monitor
     link(rel='stylesheet', href='/stylesheets/core.css')
-    link(rel='stylesheet', href='/stylesheets/listview.css')
-    link(rel='stylesheet', href='/stylesheets/splitpane.css')
-    link(rel='stylesheet', href='/stylesheets/dashboard.css')
-    link(rel='stylesheet', href='/stylesheets/terminal.css')
+    link(rel='stylesheet', href='/stylesheets/task.css')
     script(src='/javascripts/jquery-3.2.1.js')
     script(src='/javascripts/q-client.js')
     script(src='/javascripts/dashboard.js')
   body
-    div.form
-      div.splitPane
-        div.leftPane
-          div.taskList
-            ul#ulTasks
+    div.Pane#openTaskPane
+      div.Header 
+        span#txtOpenTaskCount 0
+        span 
+        span Open Tasks
+      div.Content
+        div.TaskList#lstOpenTasks
 
-        div.rightPane
-          div.placeholder
-            div.text Pick a task from the list to view its detail. 
+    div.Pane#closedTaskPane
+      div.Header
+        span#txtClosedTaskCount 0
+        span 
+        span Closed Tasks
+      div.Content
+        div.TaskList#lstClosedTasks
+
+

@@ -2,14 +2,25 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
+  font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  font-size: 13px;
   align-items: center;
 }
 
-.form {
-  height: 100%;
+div.Pane {
   width: 100%;
+  box-sizing: border-box;
 }
+
+div.Pane div.Header {
+  font-weight: 500;
+  font-size: 0.8em;
+  color: #999;
+  background: #F5F5F5;
+  padding: 3px 10px;
+  box-sizing: border-box;
+}
+
