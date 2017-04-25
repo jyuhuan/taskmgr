@@ -1,6 +1,8 @@
 // APIs for task CRUD
 // The data of the tasks is in ../core/Q.js
 
+const DEBUG = true;
+
 const express = require('express');
 const router = express.Router();
 
@@ -60,68 +62,40 @@ router.get('/:id/formatted-progress', (req, res, next) => res.json(tryId(req.par
 // MODIFIER METHODS
 
 // Adds a new task. A new ID will be assigned and returned.
-router.put('/', (req, res, next) => {
+router.post('/', (req, res, next) => {
   const newId = generateNewId();
   const body = req.body;
-  console.log(req.body);
-  const newTask = {
+  if (DEBUG) console.log(req.body);
+  Q.addTask({
     id: newId,
     name: body.name,
     description: body.description,
     steps: body.steps,
     max: body.max
-  };
-  Q.addTask(newTask);
-  res.json(newTask);
+  });
+  res.json(Success(newId));
 });
 
-router.put('/:id/name', (req, res, next) => {
-  const id = req.params.id;
-  const body = req.body;
-  console.log(body);
-  if ('newValue' in body) {
-    Q.setNameOf(id, body.newValue);
-    res.send(StandardResponse.Success);
-  }
-  else res.send(StandardResponse.Failure);
-});
+const tryChangePropertyOfTask = (taskId, propName, newValue) => {
+  if (!newValue) return Failure(Error.NewPropertyValueMissing);
+  if (!Q.exists(taskId)) return Failure(Error.TaskNotExist);
+  Q.setPropOf(taskId, propName, newValue);
+  return Success(true);
+};
 
-router.put('/:id/description', (req, res, next) => {
-  const id = req.params.id;
-  const body = req.body;
-  console.log(body);
-  if ('newValue' in body) {
-    Q.setDescriptionOf(id, body.newValue);
-    res.send(StandardResponse.Success);
-  }
-  else res.send(StandardResponse.Failure);
-});
-
-router.put('/:id/steps', (req, res, next) => {
-  const id = req.params.id;
-  const body = req.body;
-  console.log(body);
-  if ('newValue' in body) {
-    Q.setStepsOf(id, parseFloat(body.newValue));
-    res.send(StandardResponse.Success);
-  }
-  else res.send(StandardResponse.Failure);
-});
-
-router.put('/:id/max', (req, res, next) => {
-  const id = req.params.id;
-  const body = req.body;
-  console.log(body);
-  if ('newValue' in body) {
-    Q.setMaxOf(id, parseFloat(body.newValue));
-    res.send(StandardResponse.Success);
-  }
-  else res.send(StandardResponse.Failure);
-});
+// Changes the name of a task
+router.put('/:id/name',        (req, res, next) => res.json(tryChangePropertyOfTask(req.params.id, 'name', req.body.val)));
+router.put('/:id/description', (req, res, next) => res.json(tryChangePropertyOfTask(req.params.id, 'description', req.body.val)));
+router.put('/:id/steps',       (req, res, next) => res.json(tryChangePropertyOfTask(req.params.id, 'steps', parseInt(req.body.val))));
+router.put('/:id/max',         (req, res, next) => res.json(tryChangePropertyOfTask(req.params.id, 'max', parseInt(req.body.val))));
 
 router.put('/:id/finish', (req, res, next) => {
-  Q.setStepsOf(req.params.id, 100);
-  res.send(StandardResponse.Success);
+  const id = req.params.id;
+  if (Q.exists(id)) {
+    Q.setStepsOf(req.params.id, 100);
+    res.send(Success(true));
+  }
+  else res.json(Failure(Error.TaskNotExist));
 })
 
 module.exports = router;

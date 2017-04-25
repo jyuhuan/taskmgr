@@ -43,6 +43,7 @@ const ε = module.exports;
 ε.setMaxOf = (id, p) => tasks[id].max = p;
 
 // General modifier methods
+ε.setPropOf = (id, k, v) => tasks[id][k] = v;
 ε.setIntPropOf = (id, k, v) => tasks[id][k] = parseInt(v);
 ε.setFloatPropOf = (id, k, v) => tasks[id][k] = parseFloat(v);
 ε.setStringPropOf = (id, k, v) => tasks[id][k] = v.toString();
